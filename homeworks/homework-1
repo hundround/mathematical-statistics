@@ -1,0 +1,124 @@
+\documentclass[12pt]{exam}
+\usepackage{listings, color, tcolorbox, caption}
+\definecolor{mygreen}{RGB}{28, 66, 32} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+\definecolor{morgantred}{RGB}{173,13,0}
+\usepackage{amsmath, amsthm, amssymb, multicol, framed, graphicx, tikz, mathrsfs, enumitem, gensymb, bbold}
+\usepackage[most]{tcolorbox}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{cmbright}
+\usepackage[a4paper, margin=2cm]{geometry}
+\makeatletter
+\renewcommand*\env@matrix[1][\arraystretch]{%
+  \edef\arraystretch{#1}%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{*\c@MaxMatrixCols c}}
+\makeatother
+\pagestyle{headandfoot}
+\begin{document}
+\begin{flushleft}
+Math 150.2 AY 2022-2023 2nd Semester
+\\March 07, 2023
+\\\textbf{W2 Assessment 1}
+\end{flushleft}
+\noalign\hline
+\vspace{0.3in}
+\begin{enumerate}
+    %%% Item 1 %%%
+    \item A population consists of the numbers \(3, 6, 12, 18\). Consider all possible samples of size \(2\) which can be drawn with replacement from this population. Find the mean and standard deviation of the sampling distribution of the means.
+
+    \begin{proof}[Solution]
+        Let the population be \(X\) with mean and variance \(\mu\) and \(\sigma^2\), respectively. The sampling distribution is the mean of the realizations of the samples. We let \(T\) be the statistic of the random variables \(X_i\). By the derivation of the mean and variance from the lecture, we have the following
+        \begin{equation*}
+        \begin{split}
+            \mathbb{E}[T] &= \dfrac{1}{n}\sum_{i = 1}^n \mathbb{E}[X_i]
+            \\&= \mu 
+            \\&= \dfrac{3 + 6 + 12 + 18}{4} = \boxed{\dfrac{39}{4}}.
+        \end{split}
+        \end{equation*}
+        Furthermore, the variance of the sampling distribution is equal to \(\dfrac{\sigma^2}{n}\) which implies that
+        \begin{equation*}
+        \begin{split}
+            s^2 &= \dfrac{\sigma^2}{n}
+            \\&= \dfrac{1}{n}\cdot \mathbb{E}[\left(X - \mu\right)^2]
+            \\&= \dfrac{1}{n}\cdot\dfrac{(3 - 9.75)^2 + (6-9.75)^2 + (12-9.75)^2 + (18-9.75)^2}{4}
+            \\&= \dfrac{1}{2}\cdot\dfrac{132.75}{4}
+            \\&= 16.59375
+        \end{split}
+        \end{equation*}
+        Therefore, the standard deviation of the sampling distribution is \(\boxed{4.07354}.\)
+    \end{proof}
+    %%% Item 2 %%%
+    \item Let \(X_1, X_2,..., X_n\) be random samples from a population with a uniform distribution on the interval \((0, \theta)\), and \(Y_1, Y_2,..., Y_n\) be the corresponding order statistics.
+    \begin{enumerate}
+        \item Find \(f_{Y_1}(x)\).
+        %%% Solution Subitem 1 %%%
+        \begin{proof}[Solution]
+            We are to find the pdf of the 1st order statistic. The process of finding the CDF of the specified order statistic and differentiating afterwards can be denoted by
+            \begin{equation*}
+            \begin{split}
+                f_{Y_k}(x)&= \dfrac{n!}{(k - 1)!(n - k)!}[F(x)]^{k - 1}[1 - F(x)]^{n - k}f(x)\mathbb{1}_{(0,\:\theta)}(x).
+            \end{split}
+            \end{equation*}
+            Note that
+            \begin{equation*}
+                F(x) = \int_0^x \dfrac{1}{\theta}\:dt = \dfrac{x}{\theta}
+            \end{equation*}
+            Therefore, we have
+            \begin{equation*}
+            \begin{split}
+                f_{Y_1} (x) &= \dfrac{n!}{(n - 1)!}\left(1 - \dfrac{x}{\theta}\right)^{n-1}\left(\dfrac{1}{\theta}\right) = \boxed{\left(\dfrac{n}{\theta}\right)\left(1 - \dfrac{x}{\theta}\right)^{n-1}\mathbb{1}_{(0,\: \theta)}(x)}.
+            \end{split}
+            \end{equation*}
+        \end{proof}
+        \item Is \(Y_1\) an unbiased estimator of \(\theta\)?
+         %%% Solution Subitem 2 %%%
+            \begin{proof}[Solution]
+                Given that the population follows uniform distribution, we conclude that the 1st order statistic is unbiased if \(\mathbb{E}[Y_1] = \theta\).
+                \begin{enumerate}
+                    \item The mean of the order statistic is
+                    \begin{equation*}
+                    \begin{split}
+                        \mathbb{E}[Y_1] &= \int_0^{\theta} xf_{Y_1}(x)\:dx
+                        \\&= \int_0^{\theta} x\left(\dfrac{n}{\theta}\right)\left(1 - \dfrac{x}{\theta}\right)^{n-1}\:dx
+                    \end{split}
+                    \end{equation*}
+                    We let \(u = 1 - \dfrac{x}{\theta}\), and it follows that \(x = \theta(1 - u)\) and \(dx = -\theta du\). Moreover, the bounds of integration change to \(x = 0 \rightarrow u = 1\) and \(x = \theta \rightarrow u = 0\). Thus,
+                    \begin{equation*}
+                    \begin{split}
+                        \mathbb{E}[Y_1] &= \int_0^1 \theta(1 - u)\left(\dfrac{n}{\theta}\right)(u)^{n-1}\: \theta du
+                        \\&= n\theta\int_0^1 (u^{n-1} - u^n) du
+                        \\&= n\theta\left.\left(\dfrac{u^n}{n} - \dfrac{u^{n+1}}{n+1}\right)\right\vert_{0}^1
+                        \\&= n\theta\left(\dfrac{1}{n} - \dfrac{1}{n+1}\right)
+                        \\&= \dfrac{\theta}{n+1} \neq \theta
+                    \end{split}
+                    \end{equation*}
+
+                    \item The second raw moment of the order statistic is
+                    \begin{equation*}
+                    \begin{split}
+                        \mathbb{E}[Y_1^2] &= \int_0^{\theta} x^2\left(\dfrac{n}{\theta}\right)\left(1 - \dfrac{x}{\theta}\right)^{n-1}\:dx
+                        \\&= \int_0^1 \theta^2(1 - u)^2\left(\dfrac{n}{\theta}\right)(u)^{n-1} \theta\: du
+                        \\&= n\theta^2 \int_0^1 u^{n-1}(1 - 2u + u^2)\: du
+                        \\&= n\theta^2 \int_0^1 (u^{n-1} - 2u^n + u^{n+1}) \: du
+                        \\&= n\theta^2\left.\left(\dfrac{u^n}{n} - \dfrac{2u^{n+1}}{n+1} + \dfrac{u^{n+2}}{n+2}\right)\right\vert_0^1
+                        \\&= \dfrac{2\theta^2}{(n+1)(n+2)}
+                    \end{split}
+                    \end{equation*}
+                    Then, the variance is equal to
+                    \begin{equation*}
+                    \begin{split}
+                        \mathbb{E}[Y_1^2] - (\mathbb{E}[Y_1])^2 &= \dfrac{2\theta^2}{(n+1)(n+2)} - \left(\dfrac{\theta}{n+1}\right)^2 
+                        \\&= \dfrac{2\theta^2(n + 1) - \theta^2(n+2)}{(n+1)^2(n+2)}
+                        \\&= \dfrac{\theta^2}{(n+1)^2(n+2)}
+                    \end{split}
+                    \end{equation*}
+                \end{enumerate}
+                \textit{Answer:} \(\boxed{\text{No.}}\) It is enough to show that the mean of the order statistic is not equal to \(\theta\).
+            \end{proof}
+    \end{enumerate}
+\end{enumerate}
+\end{document}

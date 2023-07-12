@@ -1,0 +1,158 @@
+\documentclass[12pt]{exam}
+\usepackage{listings, color, tcolorbox, caption}
+\definecolor{mygreen}{RGB}{28, 66, 32} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+\definecolor{morgantred}{RGB}{173,13,0}
+\usepackage{amsmath, amsthm, amssymb, multicol, framed, graphicx, tikz, mathrsfs, enumitem, gensymb, bbold}
+\usepackage[most]{tcolorbox}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{cmbright}
+\usepackage[a4paper, margin=2cm]{geometry}
+\makeatletter
+\renewcommand*\env@matrix[1][\arraystretch]{%
+  \edef\arraystretch{#1}%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{*\c@MaxMatrixCols c}}
+\makeatother
+\pagestyle{headandfoot}
+\begin{document}
+\begin{flushleft}
+Math 150.2 AY 2022-2023 2nd Semester
+\\March 22, 2023
+\\\textbf{W4 Assessment 2}
+\end{flushleft}
+\begin{enumerate}
+    %% First Question %%
+    \item Let \(X_1,\; X_2,\: ...,\: X_n\) denote a random sample from the distribution with common pdf
+    \begin{equation*}
+        f(x;\theta) = e^{-(x - \theta)}\mathbb{1}_{(\theta, +\infty)}(x), \quad \theta \in \mathbb{R}
+    \end{equation*}
+    Let \(Y_1 = \min\left\{X_1, X_2,..., X_n\right\}\). Is \(Y_1\) a consistent estimator of \(\theta\)? Justify your answer.
+    %% Answer %%
+    \begin{proof}
+        Consider the following
+        \begin{equation*}
+        \begin{split}
+            F_X(x) &= \int_{\theta}^{x} f(t;\theta) dt
+            \\&=\int_{\theta}^x e^{-(t-\theta)}dt
+            \\&= 1 - e^{-(x-\theta)}
+        \end{split}
+        \end{equation*}
+        Hence, we have the resulting CDF of \(f\). We can now define the CDF of \(Y_1\) which can be given by
+        \begin{equation*}
+        \begin{split}
+            F_{Y_1}(x) &= 1 - (1-F_X(x))^{n} = 1 - e^{-n(x - \theta)}
+        \end{split}
+        \end{equation*}
+        To prove the consistency of \(Y_1\), we need to show that \(\mathbb{P}[\vert Y_1 - \theta\vert \geq \varepsilon]\) converges to 0 as \(n\longrightarrow \infty\). Let \(\varepsilon > 0\). We have
+        \begin{equation*}
+        \begin{split}
+            \mathbb{P}[\vert Y_1 - \theta\vert \geq \varepsilon] &= 1 - \mathbb{P}[\vert Y_1 - \theta\vert < \varepsilon]
+            \\&= 1 - \mathbb{P}[\theta - \varepsilon < Y_1 < \theta + \varepsilon]
+            \\&= 1 - (F_{Y_1}(\theta + \varepsilon) - F_{Y_1}(\theta - \varepsilon))
+        \end{split}
+        \end{equation*}
+        since \(f\) supports only the lower bound \(\theta\), then \(F(\theta - \varepsilon) = 0\). It follows that
+        \begin{equation*}
+        \begin{split}
+            \mathbb{P}[\vert Y_1 - \theta\vert \geq \epsilon] &= 1 - F_{Y_1}(\theta + \varepsilon)
+            \\&= 1 - \left(1 - e^{-n(\varepsilon)}\right)
+            \\&= 1 - \left(1 - \dfrac{1}{e^{n\varepsilon}}\right)
+        \end{split}
+        \end{equation*}
+        and since \(\varepsilon > 0\), we have \(e^{n\varepsilon} \longrightarrow \infty\) as \(n \longrightarrow \infty\). Therefore,
+        \begin{equation*}
+        \begin{split}
+            \mathbb{P}[\vert Y_1 - \theta\vert \geq \epsilon] &= 1 - 1 = 0
+        \end{split}
+        \end{equation*}
+        We have shown that indeed \(\mathbb{P}[\vert Y_1 - \theta\vert] \geq \varepsilon] \longrightarrow 0\) as \(n\longrightarrow\infty\). Therefore, \(Y_1\) is a consistent estimator.
+    \end{proof}
+
+    %% Second Question %%
+    \item In a College-wide orientation, students were asked which province do they come from. Three interviewers have asked 18, 46, and 23 people before finding someone not from Metro Manila. What is the
+    maximum likelihood estimate for the percentage of students from Manila?
+    %% Answer %%
+    \begin{proof}
+        The setup for the problem requires the geometric distribution with parameter \(p\). We let the parameter \(p\) be the probability that a student is not from Metro Manila. That is, 
+        \begin{equation*}
+            P_X(x) = (1 - p)^{x}p
+        \end{equation*}
+        We solve for the likelihood \(\mathcal{L}(p)\) by
+        \begin{equation*}
+        \begin{split}
+            \mathcal{L}(p) &= \mathbb{P}[(X_1, X_2, X_3) = (x_1, x_2, x_3)]
+            \\&= \mathbb{P}(X_1 = 18)\cdot \mathbb{P}(X_2 = 46)\cdot \mathbb{P}(X_3 = 23)
+            \\&= p^3(1 - p)^{87}
+        \end{split}
+        \end{equation*}
+        We solve for \(\ell'(p)\).
+        \begin{equation*}
+        \begin{split}
+            \ell(p) &= 3\ln(p) + 87\ln(1 - p)
+            \\\ell'(p) &= \dfrac{3}{p} - \dfrac{87}{1 - p}
+        \end{split}
+        \end{equation*}
+        We then equate the resulting derivative to zero. Moreover, \(p \neq 0\) and so is \(1 - p\). We have
+        \begin{equation*}
+        \begin{split}
+            3 - 3p = 87p \longrightarrow p = \dfrac{1}{30}.
+        \end{split}
+        \end{equation*}
+        This resulting parameter is then denoted as \(\hat{p}\) which defines the likelihood estimate for the percentage of students not in Metro Manila. Therefore, the maximum likelihood estimate for the percentage of students from Metro Manila is \(1 - \hat{p} = \boxed{\dfrac{29}{30}}\).
+    \end{proof}
+
+    %% Third Question %%
+    \item Let \(X_1,\; X_2,\: ...,\: X_n\) be a random sample from a gamma distribution with parameters \(\alpha\) and \(\beta\). Suppose \(\beta\) is known and \(\alpha\) is not.
+    \begin{enumerate}
+        \item Use the factorization theorem to show that \(\displaystyle T = \sum_{i = 1}^n \ln(X_i)\) is a sufficient statistic for \(\alpha\)
+        %% Answer %%
+        \begin{proof}
+            It is known that \(X\) is gamma distributed with parameters \(\alpha\) and \(\beta\). We have the pdf
+            \begin{equation*}
+                f(x;\alpha,\: \beta) = \dfrac{\beta^{\alpha}}{\Gamma(\alpha)}x^{\alpha - 1}e^{-\beta x}
+            \end{equation*}
+            Hence,
+            \begin{equation*}
+            \begin{split}
+                \prod_{i = 1}^n f(x_i;\alpha, \beta) &= \dfrac{\beta^{\alpha}}{\Gamma(\alpha)}x_1^{\alpha - 1}e^{-\beta x_1}\cdot \dfrac{\beta^{\alpha}}{\Gamma(\alpha)}x_2^{\alpha - 1}e^{-\beta x_2}\cdot ...\cdot \dfrac{\beta^{\alpha}}{\Gamma(\alpha)}x_n^{\alpha - 1}e^{-\beta x_n}
+                \\&= \left(\dfrac{\beta^{\alpha}}{\Gamma(\alpha)}\right)^n\prod_{i = 1}^{n} x_i^{\alpha - 1}e^{-\sum\beta x_i}
+            \end{split}
+            \end{equation*}
+            Consider the following
+            \begin{equation*}
+            \begin{split}
+                \prod_{i = 1}^n f(x_i;\alpha, \beta) &= \exp\left[\ln\left(\prod_{i=1}^n f(x_i;\alpha, \beta)\right)\right]
+                \\&= \exp\left[n\ln\left(\dfrac{\beta^{\alpha}}{\Gamma(\alpha)}\right)+(\alpha - 1)\sum_{i = 1}^n \ln(x_i) - \beta\sum_{i = 1}^n x_i\right]
+                \\&= \exp\left[n\ln\left(\dfrac{\beta^{\alpha}}{\Gamma(\alpha)}\right)+(\alpha - 1)\sum_{i = 1}^n \ln(x_i)\right]\cdot \dfrac{1}{ \exp\left(\beta\sum_{i = 1}^n x_i\right)}
+            \end{split}
+            \end{equation*}
+            We let the functions \(g\) and \(h\) be
+            \begin{equation*}
+                g(\cdot; \alpha,\beta) := \exp\left[n\ln\left(\dfrac{\beta^{\alpha}}{\Gamma(\alpha)}\right)+(\alpha - 1)\sum_{i = 1}^n \ln(x_i)\right] \quad \text{and}\quad h(\cdot; \beta):= \dfrac{1}{\exp\left(\beta\sum_{i = 1}^n x_i\right)}
+            \end{equation*}
+            where both \(g\) and \(h\) are nonnegative functions. Moreover, \(g\) is a function of \(T\). By the factorization theorem, we conclude that \(T\) is indeed a sufficient statistic of \(\alpha\).
+        \end{proof}
+        \item Is \(\displaystyle\prod_{i = 1}^n X_i\) also sufficient? Justify your answer.
+        %% Answer %%
+        \begin{proof}
+            Consider the same distribution as above and we have the following
+            \begin{equation*}
+            \begin{split}
+                \prod_{i = 1}^n f(x_i;\alpha, \beta) &= \left(\dfrac{\beta^{\alpha}}{\Gamma(\alpha)}\right)^n\prod_{i = 1}^{n} x_i^{\alpha - 1}e^{-\sum\beta x_i}
+                \\&= \left(\dfrac{\beta^{\alpha}}{\Gamma(\alpha)}\right)^n\left(\prod_{i = 1}^{n} x_i\right)^{\alpha - 1} e^{-\sum\beta x_i}
+            \end{split}
+            \end{equation*}
+            We let the functions \(g\) and \(h\) by
+            \begin{equation*}
+                g(\cdot; \alpha, \beta) := \left(\dfrac{\beta^{\alpha}}{\Gamma(\alpha)}\right)^n\left(\prod_{i = 1}^{n} x_i\right)^{\alpha - 1} \quad \text{and}\quad h(\cdot; \beta) := e^{-\sum\beta x_i}
+            \end{equation*}
+            Both of which are nonnegative functions.
+            We can see that \(g\) is indeed a function of \(T = \displaystyle\prod_{i = 1}^n X_i\) and \(h\) is independent of the parameter \(\alpha\). Hence, by the factorization theorem, \(T = \displaystyle\prod_{i = 1}^n X_i\) is also sufficient.
+        \end{proof}
+   \end{enumerate}
+\end{enumerate}
+\end{document}

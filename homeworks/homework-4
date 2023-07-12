@@ -1,0 +1,90 @@
+\documentclass[12pt]{exam}
+\usepackage{listings, color, tcolorbox, caption}
+\definecolor{mygreen}{RGB}{28, 66, 32} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+\definecolor{morgantred}{RGB}{173,13,0}
+\usepackage{amsmath, amsthm, amssymb, multicol, framed, graphicx, tikz, mathrsfs, enumitem, gensymb, bbold}
+\usepackage[most]{tcolorbox}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{cmbright}
+\usepackage[a4paper, margin=2cm]{geometry}
+\makeatletter
+\renewcommand*\env@matrix[1][\arraystretch]{%
+  \edef\arraystretch{#1}%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{*\c@MaxMatrixCols c}}
+\makeatother
+\pagestyle{headandfoot}
+\begin{document}
+\begin{flushleft}
+Math 150.2 AY 2022-2023 2nd Semester
+\\May 21, 2023
+\\\textbf{Assessment 4: Test of Means and Proportions}
+\end{flushleft}
+\noalign\hline
+\vspace{0.3in}
+\begin{enumerate}
+    \item A plantita looked at the effect of a certain fertilizer. She tested the fertilizer on one group of plants (\(A\)) and did not give fertilizer to another group (\(B\)). The growth of the plants, in \(mm\), were as follows:
+    \begin{center}
+    \begin{tabular}{c|c}
+         Group & Growth \\
+         \hline\hline
+         A & 55 61 33 57 17 46 50 42 71 51 63 \\
+         B & 31 27 12 44 9 25 34 53 33 21 32 \\
+    \end{tabular}
+    \end{center}
+    On a \(1\%\) significance level, test the claim that the fertilizer enhanced growth. Assume that the distributions of growths are approximately normal with equal variances.
+
+    \begin{proof}[Solution]
+        We are to assume that the distribution of growths is approximately normal with equal variances. Since the two groups of plants are independent of each other, and the fertilizer is used only to the first group, \(A\), then we are not going to proceed with paired means. Let \(\mu_A\) and \(\mu_B\) be the means of \(A\) and \(B\), respectively. Then we have the following hypotheses:
+        
+        \begin{align*}
+            H_0: \mu_A - \mu_B &= 0 \\
+            H_1: \mu_A - \mu_B &> 0 
+        \end{align*}
+
+        Let \(s_A\) and \(s_B\) be the sample standard deviation of \(A\) and \(B\), respectively. Moreover, \(\overline{x}_A = (55+61+33+57+17+46+50+42+71+51+63)/11 = 49.63636\) and \(\overline{x}_B = (31+27+12+44+9+25+34+53+33+21+32)/11 = 29.18182\) It follows that
+        \begin{align*}
+            s_A^2 &= \dfrac{\displaystyle\sum_{i = 1}^{11}(x_i - 49.63636)^2}{10} \\
+            &= 226.25455
+            s_B^2 &= \dfrac{\displaystyle\sum_{i = 1}^{11}(x_i - 29.18182)^2}{10} \\
+            &= 162.76364
+        \end{align*}
+        and \(df = 11 + 11 - 2 = 20\) given that \(n_A = n_B = 11\). Hence,
+        \begin{align*}
+            s_p &= \sqrt{\dfrac{10s_A^2 + 10s_B^2}{df}} \\
+            &= \sqrt{\dfrac{s_A^2 + s_B^2}{2}} \\
+            &= 13.94665175
+        \end{align*}
+        Solving for statistic \(t-\)value, we have
+        \begin{align*}
+            t &= \dfrac{\overline{x}_A - \overline{x}_B}{s_p\sqrt{\dfrac{1}{n_A} + \dfrac{1}{n_B}}} \\
+            &= \dfrac{49.63636 - 29.18182}{13.94665175\sqrt{2/11}} \\
+            &= 3.439545867
+        \end{align*}
+        Using \(\alpha = 0.01\) and \(df = 20\), we have the critical value \(t_{0.01,\:20} = 2.528\). We reject \(H_0\) if \(t > t_{0.01,\: 20}\). Since \(3.4395 > 2.528\), then we reject \(H_0\). In conclusion, the fertilizer indeed enchanced growth of the plants.
+    \end{proof}
+
+    \item A total of 8605 students are enrolled full-time at a State University this semester, 4134 of whom are women. Of the 6001 students who live on campus, 2915 are women. Can it be argued that the difference in the proportion of men and women living on campus is statistically significant?
+
+    \begin{proof}[Solution]
+        Out of 8605 students, 4134 are women which follows that 4471 are men. Of these 4134 women, 2915 live on campus. Moreover, 3086 of 4471 male students live on campus. We let \(p_w\) and \(p_m\) be the proportion of women and male who live on-campus, respectively. We have the following hypotheses:
+        \begin{align*}
+            H_0: p_w - p_m &= 0 \\
+            H_1: p_w - p_m &\neq 0
+        \end{align*}
+        where \(\hat{p}_w = 2915/4134\) and \(\hat{p}_m = 3086/4471\). Let \(n_w\) and \(n_m\) be the number of female and male students in the said university, respectively. Computing for statistic \(z\)-value, we have
+        \begin{equation*}
+        \begin{split}
+            z &= \dfrac{\hat{p}_w - \hat{p}_m}{\sqrt{\overline{p}\;\overline{q}\left(\dfrac{1}{n_w} + \dfrac{1}{n_m}\right)}}
+            \\&= \dfrac{2915/4134 - 3086/4471}{\sqrt{\left(\dfrac{2915 + 3086}{4134 + 4471}\right)\left(1 - \dfrac{2915 + 3086}{4134 + 4471}\right)\left(\dfrac{1}{4134} + \dfrac{1}{4471}\right)}}
+            \\&= 1.5034
+        \end{split}
+        \end{equation*}
+        We reject \(H_0\) if \(z < -z_{\alpha/2}\) or \(z > z_{\alpha/2}\). Using \(\alpha = 0.05\), we have \(z_{\alpha/2} = 1.96\). Since \(1.5034 \not < -1.96\) nor \(1.5034 \not > 1.96\), we do not reject \(H_0\). That is, the difference in the proportion of men and women living on campus is not statistically significant.
+    \end{proof}
+\end{enumerate}
+\end{document}

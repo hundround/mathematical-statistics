@@ -1,0 +1,77 @@
+\documentclass[12pt]{exam}
+\usepackage{listings, color, tcolorbox, caption}
+\definecolor{mygreen}{RGB}{28, 66, 32} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+\definecolor{morgantred}{RGB}{173,13,0}
+\usepackage{amsmath, amsthm, amssymb, multicol, framed, graphicx, tikz, mathrsfs, enumitem, gensymb, bbold}
+\usepackage[most]{tcolorbox}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{cmbright}
+\usepackage[a4paper, margin=2cm]{geometry}
+\makeatletter
+\renewcommand*\env@matrix[1][\arraystretch]{%
+  \edef\arraystretch{#1}%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{*\c@MaxMatrixCols c}}
+\makeatother
+\pagestyle{headandfoot}
+\begin{document}
+\begin{flushleft}
+Math 150.2 AY 2022-2023 2nd Semester
+\\May 21, 2023
+\\\textbf{Assessment 3: Powerful Tests}
+\end{flushleft}
+\hrule
+\vspace{0.3in}
+\begin{enumerate}
+    \item Let \(X\) be a single observation from the density \(f(x;\theta) = 2\theta x + 1-\theta\), \(x \in (0,1)\) where \(\theta \in [-1,1].\)
+
+    \begin{enumerate}
+        \item Find the most powerful test of size \(\alpha\) of \(H_0:\theta = 0\) vs \(H_1: \theta = 1\).
+
+        \begin{proof}[Solution]
+            Suppose we let \(\alpha = \mathbb{P}_{\theta_0}[\text{reject } H_0] = \mathbb{P}_{\theta_0}[x\in C]\) for a single realization \(x\) of \(X\). Furthermore, suppose
+            \begin{align*}
+                \lambda = \dfrac{L_0}{L_1} = \dfrac{f(x;\theta_0)}{f(x;\theta_1)} = \dfrac{1}{2x} \leq k
+            \end{align*}
+            for some positive \(k\). That is, \(x \geq 1/(2k)\). Then we solve for \(\alpha\).
+            \begin{align*}
+                \mathbb{P}_{\theta_0}[x\geq 1/(2k)] &= \int_{2k}^{1} 2\theta_0 x + 1 -\theta_0 dx \\
+                &= 1- \dfrac{1}{2k} \\
+                &= \alpha 
+            \end{align*}
+            and that \(1/(2k) = 1 - \alpha \). Therefore, we reject \(H_0\) if \(x \geq 1-\alpha \) for some size \(\alpha \) is the most powerful test.
+        \end{proof}
+
+        \item To test \(H_0: \theta \leq 0\) vs \(H_1: \theta > 1\), the following was used: Reject \(H_0\) if \(X\) exceeds \(1/2\). Find the power and the size of the test.
+
+        \begin{proof}[Solution]
+            Let \(\Omega_0 := \{\theta : \theta \leq 0\}\). The power is given by
+            \begin{align*}
+                \Pi_C(\theta) &= \mathbb{P}_{\theta}[X>1/2] \\
+                &= \int_{1/2}^1 2\theta x + 1 -\theta dx \\
+                &= x(\theta x + 1 - \theta)\vert_{1/2}^1 \\
+                &= \dfrac{1}{4} - \dfrac{\theta}{4}
+            \end{align*}
+            and \(\displaystyle \alpha = \sup_{\theta \in \Omega_0}\Pi_{C}(\theta) = \Pi_{C}(-1) = 0.5\). 
+        \end{proof}
+
+        \item Is there a uniformly most powerful test of size \(\alpha\) of \(H_0: \theta \leq 0\) vs \(H_1: \theta > 0\)?
+
+        \begin{proof}[Solution]
+            Solving for the MLR, we have
+            \begin{align*}
+                \dfrac{L(\theta')}{L(\theta'')} &= \dfrac{2\theta' x + 1 - \theta'}{2\theta]] x + 1 -\theta''} \\
+                &= \dfrac{\theta'(2x - 1)+ 1}{\theta''(2x - 1)+1} = M
+            \end{align*}
+            and for \(\theta' < \theta''\), \(M\) is nonincreasing function of \(T = 2x - 1\). Therefore, by \(ii\) of Theorem 06, we conclude that
+            \begin{center}
+                Reject \(H_0\) if \(2x - 1 \geq k\) for some \(k\).
+            \end{center}
+        \end{proof}
+    \end{enumerate}
+\end{enumerate}
+\end{document}
