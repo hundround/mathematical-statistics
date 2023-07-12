@@ -1,0 +1,196 @@
+\documentclass[12pt]{exam}
+\usepackage{listings, color, tcolorbox, caption}
+\definecolor{mygreen}{RGB}{28, 66, 32} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+\definecolor{morgantred}{RGB}{173,13,0}
+\usepackage{amsmath, amsthm, amssymb, multicol, framed, graphicx, tikz, mathrsfs, enumitem, gensymb, bbold}
+\usepackage[most]{tcolorbox}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{cmbright}
+\usepackage[a4paper, margin=2cm]{geometry}
+\makeatletter
+\renewcommand*\env@matrix[1][\arraystretch]{%
+  \edef\arraystretch{#1}%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{*\c@MaxMatrixCols c}}
+\makeatother
+\pagestyle{headandfoot}
+\begin{document}
+\begin{flushleft}
+Math 150.2 AY 2022-2023 2nd Semester
+\\June 14, 2023
+\\\textbf{Problem Set 2}
+\end{flushleft}
+\hrule
+\vspace{0.3in}
+\begin{enumerate}
+    \item Let \(X\) be a single observation from the density
+    \begin{equation*}
+        f(x;\theta) = \theta x^{\theta -1}\mathbb{1}_{(0,1)}(x),\quad \theta > 0
+    \end{equation*}
+    \begin{enumerate}
+        \item In testing \(H_0: \theta \leq 1\) vs. \(H_1: \theta > 1\), find the power and the size of the test given the following: Reject \(H_0\) iff \(X \leq 2/3\).
+        \begin{proof}[Solution]
+            We define the parametric space \(\Omega_0 :=\{\theta:\theta \leq 1\}\). Solving for the power of the test, we have
+            \begin{align*}
+                \Pi_C(\theta) &= \mathbb{P}_{\theta}[X\leq 2/3]
+                \\&= \int_0^{2/3}\theta x^{\theta -1}dx
+                \\&= \left(\dfrac{2}{3}\right)^{\theta}
+            \end{align*}
+            and the size \(\alpha\) of the test is
+            \begin{align*}
+                \alpha &= \sup_{\theta \in \Omega_0} \Pi_C(\theta)
+                \\&= 1
+            \end{align*}
+            since for such \(\theta \in \Omega_0\), the power attains its maximum at \(\theta = 0\).
+        \end{proof}
+        
+        \item Find the GLRT of size \(\alpha\) of \(H_0: \theta = 1\) vs. \(H_1:\theta \neq 1\).
+            \begin{proof}[Solution]
+                First, we solve for the \(\theta_{MLE}\) using methods of moments. That is,
+                \begin{align*}
+                    L(\theta) &= \theta^n\prod_{i = 1}^n x_i^{\theta -1}
+                    \\\ell(\theta) &= n\ln(\theta) + (\theta - 1)\sum_{i = 1}^n \ln x_i
+                    \\\ell'(\theta) &= \dfrac{n}{\theta} + \sum_{i=1}^n \ln x_i
+                    \\\theta_{MLE} &= -\dfrac{n}{\sum_{i=1}^n \ln x_i}
+                \end{align*}
+                For this instance, given we only have a single observation, \(\theta_{MLE} = -\dfrac{1}{\ln x}\). Moreover, we define \(\Omega_0 := \{\theta: \theta = 1\}\). Hence, 
+                \begin{align*}
+                    \sup_{\theta \in \Omega_0} L(\theta;x_i) = f(x;1) = 1
+                \end{align*}
+                Therefore,
+                \begin{align*}
+                    \lambda &= \dfrac{\sup_{\theta \in \Omega_0} L(\theta;x_i)}{\sup_{\theta \in \Omega} L(\theta;x_i)}
+                    \\&= \dfrac{1}{L(\theta_{MLE})}
+                    \\&= \dfrac{1}{-(1/\ln x)x^{-1/\ln x - 1}}
+                    \\&= -\ln(x)x^{1/\ln x + 1}
+                \end{align*}
+                and we reject \(H_0\) if \(\lambda \leq \lambda_0\) for some \(\lambda_0 \in [0,1]\).
+            \end{proof}
+    \end{enumerate}
+    \item Let \(X_1, X_2, . . . , X_n\) denote a random sample from a distribution that is \(N(0, \theta)\), where the variance \(\theta\) is an unknown positive number. Show that there exists a uniformly most powerful test of size \(\alpha\) for testing the simple hypothesis \(H_0 : \theta = \theta '\) where \(\theta\) is a fixed positive number.
+    \begin{proof}[Solution]
+        Recall that the pdf of \(N(0,\theta)\) is 
+        \begin{align*}
+            f(x;0,\theta) &= \dfrac{1}{\sqrt{2\pi\theta}}\exp(-\dfrac{1}{2\theta}x^2)
+        \end{align*}
+        Solving for MLR, we have
+        \begin{align*}
+            \dfrac{L(\theta_a)}{L(\theta_b)} &= \dfrac{\left(\dfrac{1}{\sqrt{2\pi\theta_a}}\right)^{n}\exp\left(-\dfrac{1}{2\theta_a}\sum_{i=1}^n x_i^2\right)}{\left(\dfrac{1}{\sqrt{2\pi\theta_b}}\right)^n\exp\left(-\dfrac{1}{2\theta_b}\sum_{i=1}^n x_i^2\right)}
+            \\&= \left(\dfrac{\theta_b}{\theta_a}\right)^{n/2}\exp\left(\dfrac{1}{2}\sum x^2\left(\dfrac{1}{\theta_b}-\dfrac{1}{\theta_a}\right)\right) = M\quad(\text{say})
+        \end{align*}
+        and for every \(\theta_a < \theta_b\), \(M'<0\). Hence, \(M\) is a nonincreasing function of \(T= \sum x^2\). Then there exists a MLR on \(T\). Moreover,
+        \begin{align*}
+            \left(\dfrac{\theta_b}{\theta_a}\right)^{n/2}\exp\left(\dfrac{1}{2}\sum x^2\left(\dfrac{1}{\theta_b}-\dfrac{1}{\theta_a}\right)\right) \leq k' \longrightarrow \sum x^2 \leq 2\ln\left(\left(\dfrac{\theta_a}{\theta_b}\right)^{n/2} k'\right)\left(\dfrac{1}{\theta_b}-\dfrac{1}{\theta_a}\right)^{-1} = k^*
+        \end{align*}
+        and for every \(k^*\) such that \(\mathbb{P}_{\theta = \theta'}\left(T\leq k^*\right) = \alpha\), the test corresponding to \(C := \{T\leq k^*\}\) is the UMPT of size \(\alpha\) of \(H_0: \theta = \theta'\). 
+    \end{proof}
+
+    \item A study recorded the growth in Standard \& Poor’s stock index following each election of a new president, given in the following table.
+
+    \begin{table}[h!]
+    \centering
+        \begin{tabular}{c||c c c c c c c c c}
+            Republicans & 22.4& 24.0& 38.0& 45.7& 21.2& 17.9& 38.2& 33.7& 23.8 \\
+            \hline
+            Democrats & 45.7& 28.6& 14.2& 18.8& 50.3& 40.1& 52.4\\ 
+        \end{tabular}
+    \end{table}
+    Test, at a \(10\%\) significance level, if the election of a Republican president is not good for the stock market. Assume variances are not equal.
+    \begin{proof}[Solution]
+        Let the means be \(\mu_R\) and \(\mu_D\) for the republican and democrats, respectively. We have the following hypotheses:
+        \begin{align*}
+            H_0: \mu_R -\mu_D = 0\quad\text{vs.}\quad H_1: \mu_R - \mu_D < 0
+        \end{align*}
+        We have the statistics \(\overline{x}_R = 29.433\) and \(\overline{x}_D = 35.7286\). at it follows that
+        \begin{align*}
+            s_R^2 &= \dfrac{1}{8}\sum_{i=1}^9 (x_i - \overline{x}_R)^2 = 93.0725
+            \\S_D^2 &= \dfrac{1}{6}\sum_{i=1}^7 (x_i - \overline{x}_D)^2 = 234.9457
+        \end{align*}
+        Solving for \(t-\)statistic, we have
+        \begin{align*}
+            t &= \dfrac{\overline{x}_R - \overline{x}_D}{\sqrt{s_R^2/n_R + s_D^2/n_D}} = -0.9501
+        \end{align*}
+        Solving for \(df\), we have
+        \begin{align*}
+            df &= \dfrac{(s_R^2/n_R + s_D^2/n_D)^2}{\dfrac{(s_R^2/n_R)^2}{n_R -1}+ \dfrac{(s_D^2/n_D)^2}{n_D -1}}
+            \\&= 9.584 \approx 9
+        \end{align*}
+        Hence, the critical value is \(t_{0.1,9} = 1.383\). Since \(t \not < -1.383\), we do not reject \(H_0\). That is, there is no sufficient evidence to say that the election of a Republican president is not good for the stock market. 
+    \end{proof}
+    \item Randomly pick eight integers from 0 to 500. Is there evidence that the standard deviation of the sample is different from 140?
+
+    \begin{proof}[Solution]
+        We have the following hypotheses:
+        \begin{align*}
+            &H_0: \sigma^2 - 140^2 = 0
+            \\&H_1: \sigma^2 - 140^2 \neq 0
+        \end{align*}
+        Using MATLAB {\fontfamily{qcr}\selectfont randi} function\(^1\), we got the following pseudorandom numbers: 479, 483, 78, 486, 479, 243, 400, and 71. 
+
+        Solving for \(s^2\), we have
+        \begin{align*}
+            n &= 8
+            \\\overline{x} &= 339.875
+            \\s^2 &= \dfrac{1}{7}\sum_{i=1}^8 (x_i - 339.875)^2 = 33488.696
+        \end{align*}
+        Hence, the \(\chi^2-\)statistic is
+        \begin{align*}
+            \chi^2 = \dfrac{(n-1)s^2}{\sigma_0^2} = 11.96
+        \end{align*}
+        Moreover, given \(\alpha = 0.05\) and \(df = 7\), we have the following critical values
+        \begin{align*}
+            \chi^2_{0.975,7} &= 1.690
+            \\\chi^2_{0.025,7} &= 16.013
+        \end{align*}
+        and since \(\chi^2 = 11.96 \in (1.690, 16.013)\), we do not reject \(H_0\). That is, there is sufficient evidence that the standard deviation of the eight randomly generated numbers is not different from 140.
+    \end{proof}
+
+    \item Let \(X\) equal to the number of male children in a four-child family. At a 0.05 significance level, we test the null hypothesis that \(X \sim Bi(4, 0.5)\). Among all the students taking Math 150.2, 50 came from families with 4 children. From the group, x = 0, 1, 2, 3 and 4 had counts of 3, 15, 11, 15, and 6, respectively.
+    \begin{enumerate}
+        \item Define the test statistic and critical region.
+        \begin{proof}[Solution]
+            We have the following hypotheses:
+            \begin{align*}
+                & H_0: X\sim Bi(4,0.5) \\
+                & H_1: X\not\sim Bi(4,0.5)
+            \end{align*}
+
+            Recall that \(X \sim f(x;4,0.5) = \binom{4}{x} \left(\frac{1}{16}\right)\). Then we have the following expected and sample values
+
+            \begin{table}[h!]
+            \centering
+            \begin{tabular}{c||c c c c c c c c c}
+            Expected & 50(1/16) & 50(1/4) & 50(3/8) & 50(1/4) & 50(1/16)\\
+            \hline
+            Sample & 3 & 15 & 11 & 15 & 6\\ 
+            \end{tabular}
+            \end{table}
+
+            Hence, our \(\chi^2-\) statistic is
+            \begin{align*}
+                Q &= \dfrac{((50/16)-3)^2}{50/16} + \dfrac{((50/4)-15)^2}{50/4}+\dfrac{((150/8)-11)^2}{150/8}+\dfrac{((50/4)-15)^2}{50/4}
+                \\&\quad +\dfrac{((50/16)-6)^2}{50/16}
+                \\&= 6.853
+            \end{align*}
+            Moreover, our critical value is \(\chi^2_{0.05,4} = 9.488\).
+        \end{proof}
+        \item Find the \(p-\)value of the test statistic.
+        \begin{proof}[Solution]
+            Given that \(Q = 6.853\), we have \(p \in (0.1,0.9)\).
+        \end{proof}
+        \item Give the conclusion to the test
+        \begin{proof}[Solution]
+            For the critical value, since \(Q \not > 9.488\), we do not reject \(H_0\). For the \(p-\)value, since \(p \not < 0.05\), we also do not reject \(H_0\). That is, \(X\sim Bi(4,0.5)\)
+        \end{proof}
+    \end{enumerate}
+\end{enumerate}
+\(^1\)A screenshot showing the generated numbers used
+\begin{center}
+    \tcbox[colframe=green!30!black,
+        colback=gray!30]{\includegraphics[scale=1]{8_Rand_Int.png}}
+\end{center}
+\end{document}
